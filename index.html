@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Network of Copernicus Academy and Copernicus Relays</title>
+    <!-- leaflet css -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+
+
+    <style>
+      body{
+        margin:0;
+        padding:0;
+      }
+      #map{
+        position: relative;
+        width: 80%;
+        height: 90vh;
+        margin: auto;
+        margin-top: 20px;
+      }
+      .filter-container {
+      position: absolute;
+      width: 350px;
+      bottom: 25px;
+      left: 10px;
+      background-color: white;
+      padding: 10px; /* Increase padding for better spacing */
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+      z-index: 1000;
+      }
+
+      .checkbox-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: left;
+      margin-top: 5px;
+      }
+
+      .filter-container label {
+      display: flex;
+      align-items: center;
+      }
+
+      .filter-container input {
+      margin-right: 5px;
+      }
+      .legend {
+        padding: 8px;
+        background: white;
+        box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+        border-radius: 5px;
+        margin: 20px;
+        z-index: 999;
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        width: 200px;
+      }
+      label {
+        font-family: sans-serif;
+        font-size: 13px;
+        color: #333;
+       margin-right: 5px;
+      }
+    </style>
+  </head>
+
+  <body>
+      <div id="map">
+        <div class="filter-container">
+          <label><strong>Show:</strong></label>
+          <div class="checkbox-row">
+            <label for="academiesCheckbox">Copernicus Academy Members</label>
+            <input type="checkbox" id="academiesCheckbox" checked>
+        
+            <label for="relaysCheckbox">Copernicus Relays</label>
+            <input type="checkbox" id="relaysCheckbox" checked>
+          </div>
+        
+          <!--<div class="checkbox-row">
+            <label for="copFellowsCheckbox">Copernicus Fellows</label>
+            <input type="checkbox" id="copFellowsCheckbox" checked>
+        
+            <label for="EUSpaceambassadorCheckbox">EU Space Ambassador</label>
+            <input type="checkbox" id="EUSpaceambassadorCheckbox" checked>
+          </div>
+        
+          <div class="checkbox-row">
+            <label for="GalileoambassadorCheckbox">Galileo Ambassador</label>
+            <input type="checkbox" id="GalileoambassadorCheckbox" checked>
+        
+            <label for="IRISambassadorCheckbox">IRIS2 Ambassador</label>
+            <input type="checkbox" id="IRISambassadorCheckbox" checked>
+          </div>-->
+        </div>        
+      </div>
+      
+  
+
+<!--leaflet js -->
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+
+
+<!-- import relays variable from external javascript file -->
+<script src="CopernicusRelays.js"></script>
+
+<!-- import academies variable from external javascript file -->
+<script src="CopernicusAcademies.js"></script>
+
+<script> 
+  //Map initialization
+  const map = L.map('map').setView([49.5, 15], 4);
+
+  // GISCO layer
+  const giscoLayer = L.tileLayer('https://gisco-services.ec.europa.eu/maps/tiles/OSMCartoComposite/EPSG3857/{z}/{x}/{y}.png', {
+    maxZoom: 19,
+    attribution: '&copy; <a href="https://ec.europa.eu/eurostat/web/gisco/overview">EC-GISCO</a> | &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+    //attribution: '© OpenStreetMap contributors, Credit: EC-GISCO'
+    });
+  giscoLayer.addTo(map);
+
+  //MARKERS
+  //Icon style
+  const myIcon_Orange = L.icon({
+    iconUrl: 'https://www.pngall.com/wp-content/uploads/2017/05/Map-Marker-Free-Download-PNG.png',
+    iconSize: [30,30],
+    });
+
+  const myIcon_Red= L.icon({
+    iconUrl: 'https://www.pngall.com/wp-content/uploads/2017/05/Map-Marker-PNG-Picture.png',
+    iconSize: [40,40],
+    });
+
+  const myIcon_Academy =L.icon({
+      iconUrl: 'Academy.svg',
+      iconSize: [30, 30], // Default size
+
+    });
+
+  const myIcon_Black= L.icon({
+    iconUrl: 'https://www.pngall.com/wp-content/uploads/2017/05/Map-Marker-PNG-Clipart.png',
+    iconsize: [30,43],
+  });
+
+//Loop through the ACADEMIES and add markers to the cluster group
+for (let i = 0; i < academies.length; i++) {
+  const academy = academies[i];
+  const coordinates = academy.Coordinates.split(',').map(coord => parseFloat(coord.trim()));
+
+  if (!isNaN(coordinates[0]) && !isNaN(coordinates[1])) {
+    const popupContentAcademies = `
+    <strong>${academy.Name}</strong><br>
+      Primary contact: ${academy.Contact}<br>
+      Email: <a href="mailto:${academy.Email}">${academy.Email}</a><br>
+    `;
+    const marker = L.marker(coordinates, { icon: myIcon_Academy, iconSize: [10, 50]});
+    marker.bindPopup(popupContentAcademies);
+    marker.addTo(map);
+    console.log(academy.Institute + ": " + coordinates[0] + ", " + coordinates[1]);
+  } else {
+    console.log("Invalid coordinates for " + academy.Institute);
+  }
+}
+
+
+//Loop through the RELAYS and add markers to the cluster group
+for (let i = 0; i < relays.length; i++) {
+  const relay = relays[i];
+  const coordinates = relay.Coordinates.split(',').map(coord => parseFloat(coord.trim()));
+
+  if (!isNaN(coordinates[0]) && !isNaN(coordinates[1])) {
+    const popupContentRelays = `
+    <strong>${relay.Name}</strong><br>
+      Primary contact: ${relay.Contact}<br>
+      Email: <a href="mailto:${relay.Email}">${relay.Email}</a><br>
+    `;
+    const marker = L.marker(coordinates, { icon: myIcon_Orange });
+    marker.bindPopup(popupContentRelays);
+    marker.addTo(map);
+    console.log(relay.Name + ": " + coordinates[0] + ", " + coordinates[1]);
+  } else {
+    console.log("Invalid coordinates for " + relay.Name);
+  }
+};
+
+//Legend
+const legend = L.control({position: 'topright'});
+
+legend.onAdd = function (map) {
+  const div = L.DomUtil.create('div', 'info legend');
+  div.innerHTML += '<img src="https://www.pngall.com/wp-content/uploads/2017/05/Map-Marker-PNG-Picture.png" style="width: 20px; height: 20px;"> EU Space Support Office<br>';
+  div.innerHTML += '<img src="Academy.svg" style="width: 20px; height: 20px;"> Copernicus Academy Members<br>';
+  div.innerHTML += '<img src="https://www.pngall.com/wp-content/uploads/2017/05/Map-Marker-Free-Download-PNG.png" style="width: 20px; height: 20px;"> Copernicus Relays<br>';
+  //div.innerHTML += '<img src="https://www.pngall.com/wp-content/uploads/2017/05/Map-Marker-PNG-Clipart.png" style="width: 20px; height: 20px;">   Copernicus Fellows<br>';
+  //div.innerHTML += '<img src="https://www.pngall.com/wp-content/uploads/2017/05/Map-Marker-PNG-Clipart.png" style="width: 20px; height: 20px;">   EU Space Ambassador<br>';
+  //div.innerHTML += '<img src="https://www.pngall.com/wp-content/uploads/2017/05/Map-Marker-PNG-Clipart.png" style="width: 20px; height: 20px;">   Galileo Ambassador<br>';
+  //div.innerHTML += '<img src="https://www.pngall.com/wp-content/uploads/2017/05/Map-Marker-PNG-Clipart.png" style="width: 20px; height: 20px;">   IRIS2 Ambassador<br>';
+  return div;
+};
+
+legend.addTo(map);
+
+
+// EUSSO marker layer
+const EUSSOLayer = L.layerGroup().addTo(map);
+//Standalone popup for EUSSO
+const brusselsCoordinates = [50.8403436233206, 4.384885539104331];
+const brusselsPopupContent = `
+  <strong>EU Space Support Office</strong><br>
+  Email: <a href="mailto:supportoffice@euspa-programme.eu">supportoffice@euspa-programme.eu<br>
+  <a href="https://www.copernicus.eu/en">More info`
+const brusselsMarker = L.marker(brusselsCoordinates, {icon: myIcon_Red}).bindPopup(brusselsPopupContent).addTo(EUSSOLayer);
+
+
+
+// Filter checkboxes
+const academiesCheckbox = document.getElementById('academiesCheckbox');
+const relaysCheckbox = document.getElementById('relaysCheckbox');
+//const CopambassadorCheckbox = document.getElementById('CopambassadorChecbox');
+//const EUSAmbassadorCheckbox = document.getElementById('EUSambassadorCheckbox');
+
+academiesCheckbox.addEventListener('change', updateMarkers);
+relaysCheckbox.addEventListener('change', updateMarkers);
+//CopambassadorChecbox.addEventListener('change', updateMarkers);
+//EUSambassadorCheckbox.addEventListener('change', updateMarkers);
+
+
+function updateMarkers() {
+  map.eachLayer(function (layer) {
+        if (layer instanceof L.Marker && layer !== EUSSOLayer.getLayers()[0]) {
+          map.removeLayer(layer);
+        }
+      });
+
+  // Add academy markers if the checkbox is checked
+  if (academiesCheckbox.checked) {
+    for (let i = 0; i < academies.length; i++) {
+      const academy = academies[i];
+      const coordinates = academy.Coordinates.split(',').map(coord => parseFloat(coord.trim()));
+
+      if (!isNaN(coordinates[0]) && !isNaN(coordinates[1])) {
+        const popupContentAcademies = `
+        <strong>${academy.Name}</strong><br>
+        Primary contact: ${academy.Contact}<br>
+        Email: <a href="mailto:${academy.Email}">${academy.Email}</a><br>
+        `;
+        const marker = L.marker(coordinates, { icon: myIcon_Academy });
+        marker.bindPopup(popupContentAcademies);
+        marker.addTo(map);
+        console.log(academy.Institute + ": " + coordinates[0] + ", " + coordinates[1]);
+      } else {
+        console.log("Invalid coordinates for " + academy.Institute);
+      }
+      }
+    }
+
+    // Add relay markers if the checkbox is checked
+    if (relaysCheckbox.checked) { 
+      for (let i = 0; i < relays.length; i++) {
+        const relay = relays[i];
+        const coordinates = relay.Coordinates.split(',').map(coord => parseFloat(coord.trim()));
+
+        if (!isNaN(coordinates[0]) && !isNaN(coordinates[1])) {
+          const popupContent = `
+            <strong>${relay.Name}</strong><br>
+            Primary contact: ${relay.Contact}<br>
+            Email: <a href="mailto:${relay.Email}">${relay.Email}</a><br>
+          `;
+          const marker = L.marker(coordinates, { icon: myIcon_Orange });
+          marker.bindPopup(popupContent);
+          marker.addTo(map);
+          console.log(relay.Name + ": " + coordinates[0] + ", " + coordinates[1]);
+        } else {
+          console.log("Invalid coordinates for " + relay.Name);
+        }
+      }
+    }
+
+
+    // Add the marker cluster group to the map
+    map.addLayer(markers);
+  }
+
+
+</script>
+</body>
+</html>
