@@ -86,7 +86,7 @@ const academies = [
     {
       "Name": "Observatorio Agroambiental y Productivo (OAyP)",
       "Address": "Via della Vasca Navale 79, Rome Italy",
-      "Coordinates": "41.895556, 12.482222",
+      "Coordinates": "-16.497812867382596, -68.13567754733708",
       "Contact": "Melisa Abalos Choque",
       "Email": "melisa.abalos@gmail.com"
     },
