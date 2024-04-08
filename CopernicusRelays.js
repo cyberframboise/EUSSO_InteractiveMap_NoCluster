@@ -324,7 +324,7 @@
     {
       "Name": "Pôle Mer Bretagne Atlantique (MORESPACE Consortium)",
       "Address": "525 AV Alexis de Rochon, 29280 Plouzané, France",
-      "Coordinates": "48.379722, -4.464444",
+      "Coordinates": "48.35851103198023, -4.56329450243905",
       "Contact": "Phil Monbet",
       "Email": "philippe.monbet@polemer-ba.com"
     },
