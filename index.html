@@ -15,8 +15,8 @@
       }
       #map{
         position: relative;
-        width: 80%;
-        height: 90vh;
+        width: 75%;
+        height: 95vh;
         margin: auto;
         margin-top: 20px;
       }
@@ -33,7 +33,7 @@
 
       .checkbox-row {
       display: flex;
-      justify-content: space-between;
+      <!--justify-content: space-between;-->
       align-items: left;
       margin-top: 5px;
       }
@@ -79,11 +79,11 @@
             <input type="checkbox" id="relaysCheckbox" checked>
           </div>
         
-          <!--<div class="checkbox-row">
-            <label for="copFellowsCheckbox">Copernicus Fellows</label>
-            <input type="checkbox" id="copFellowsCheckbox" checked>
+          <div class="checkbox-row">
+            <label for="CopFellowsCheckbox">Copernicus Fellows</label>
+            <input type="checkbox" id="CopFellowsCheckbox" checked>
         
-            <label for="EUSpaceambassadorCheckbox">EU Space Ambassador</label>
+            <!--<label for="EUSpaceambassadorCheckbox">EU Space Ambassador</label>
             <input type="checkbox" id="EUSpaceambassadorCheckbox" checked>
           </div>
         
@@ -111,7 +111,7 @@
 
 <script> 
   //Map initialization
-  const map = L.map('map').setView([49.5, 15], 4);
+  const map = L.map('map').setView([49.5, 15],4);
 
   // GISCO layer
   const giscoLayer = L.tileLayer('https://gisco-services.ec.europa.eu/maps/tiles/OSMCartoComposite/EPSG3857/{z}/{x}/{y}.png', {
@@ -135,14 +135,14 @@
 
   const myIcon_Academy =L.icon({
       iconUrl: 'Academy.svg',
-      iconSize: [30, 30], // Default size
+      iconSize: [30, 30], 
 
     });
 
-  const myIcon_Black= L.icon({
-    iconUrl: 'https://www.pngall.com/wp-content/uploads/2017/05/Map-Marker-PNG-Clipart.png',
-    iconsize: [30,43],
-  });
+    const myIcon_Black = L.icon({
+    iconUrl: 'https://www.pngall.com/wp-content/uploads/2017/05/Map-Marker-PNG-Clipart.png', // Adjust the URL if needed
+    iconSize: [30, 30], // Adjust width and height as required
+    });
 
 //Loop through the ACADEMIES and add markers to the cluster group
 for (let i = 0; i < academies.length; i++) {
@@ -158,11 +158,9 @@ for (let i = 0; i < academies.length; i++) {
     const marker = L.marker(coordinates, { icon: myIcon_Academy, iconSize: [10, 50]});
     marker.bindPopup(popupContentAcademies);
     marker.addTo(map);
-    console.log(academy.Institute + ": " + coordinates[0] + ", " + coordinates[1]);
-  } else {
-    console.log("Invalid coordinates for " + academy.Institute);
   }
 }
+
 
 
 //Loop through the RELAYS and add markers to the cluster group
@@ -179,11 +177,73 @@ for (let i = 0; i < relays.length; i++) {
     const marker = L.marker(coordinates, { icon: myIcon_Orange });
     marker.bindPopup(popupContentRelays);
     marker.addTo(map);
-    console.log(relay.Name + ": " + coordinates[0] + ", " + coordinates[1]);
-  } else {
-    console.log("Invalid coordinates for " + relay.Name);
   }
 };
+
+//SANITY CHECK 
+
+//number of ACADEMIES
+let totalAcademies = 0;
+
+for (let i = 0; i < academies.length; i++) {
+  const academy = academies[i];
+  totalAcademies++; // Increment counter for each academy
+}
+console.log("Total Academies processed:", totalAcademies);
+
+
+//number of RELAYS
+let totalRelays = 0;
+
+for (let i = 0; i < relays.length; i++) {
+  const relay = relays[i];
+  totalRelays++; // Increment counter for each academy
+}
+console.log("Total Relays processed:", totalRelays);
+
+// duplicates Relays
+function findDuplicateRelaysByName(relays) {
+  const relayNames = new Set(); // Set to store unique relay names
+  const duplicateRelays = []; // Array to store relays with duplicate names
+
+  for (const relay of relays) {
+    const relayName = relay.Name; // Extract the Name property
+    if (relayNames.has(relayName)) { // Check if name already exists
+      duplicateRelays.push(relay);
+    } else {
+      relayNames.add(relayName); // Add unique name to the Set
+    }
+  }
+
+  if (duplicateRelays.length > 0) {
+    console.log("Duplicate Copernicus Relays (by Name):", duplicateRelays);
+  } else {
+    console.log("No duplicate Copernicus Relay Names found.");
+  }
+}
+findDuplicateRelaysByName(relays);
+
+// duplicates Academies
+function findDuplicateAcademiesByName(academies) {
+  const academyNames = new Set(); // Set to store unique relay names
+  const duplicateAcademies = []; // Array to store relays with duplicate names
+
+  for (const academy of academies) {
+    const academyName = academy.Name; // Extract the Name property
+    if (academyNames.has(academyName)) { // Check if name already exists
+      duplicateAcademies.push(academy);
+    } else {
+      academyNames.add(academyName); // Add unique name to the Set
+    }
+  }
+
+  if (duplicateAcademies.length > 0) {
+    console.log("Duplicate Copernicus Academy (by Name):", duplicateAcademies);
+  } else {
+    console.log("No duplicate Copernicus Academy Names found.");
+  }
+}
+findDuplicateAcademiesByName(academies);
 
 //Legend
 const legend = L.control({position: 'topright'});
@@ -193,7 +253,7 @@ legend.onAdd = function (map) {
   div.innerHTML += '<img src="https://www.pngall.com/wp-content/uploads/2017/05/Map-Marker-PNG-Picture.png" style="width: 20px; height: 20px;"> EU Space Support Office<br>';
   div.innerHTML += '<img src="Academy.svg" style="width: 20px; height: 20px;"> Copernicus Academy Members<br>';
   div.innerHTML += '<img src="https://www.pngall.com/wp-content/uploads/2017/05/Map-Marker-Free-Download-PNG.png" style="width: 20px; height: 20px;"> Copernicus Relays<br>';
-  //div.innerHTML += '<img src="https://www.pngall.com/wp-content/uploads/2017/05/Map-Marker-PNG-Clipart.png" style="width: 20px; height: 20px;">   Copernicus Fellows<br>';
+  div.innerHTML += '<img src="https://www.pngall.com/wp-content/uploads/2017/05/Map-Marker-PNG-Clipart.png" style="width: 20px; height: 20px;">   Copernicus Fellows<br>';
   //div.innerHTML += '<img src="https://www.pngall.com/wp-content/uploads/2017/05/Map-Marker-PNG-Clipart.png" style="width: 20px; height: 20px;">   EU Space Ambassador<br>';
   //div.innerHTML += '<img src="https://www.pngall.com/wp-content/uploads/2017/05/Map-Marker-PNG-Clipart.png" style="width: 20px; height: 20px;">   Galileo Ambassador<br>';
   //div.innerHTML += '<img src="https://www.pngall.com/wp-content/uploads/2017/05/Map-Marker-PNG-Clipart.png" style="width: 20px; height: 20px;">   IRIS2 Ambassador<br>';
@@ -209,27 +269,37 @@ const EUSSOLayer = L.layerGroup().addTo(map);
 const brusselsCoordinates = [50.8403436233206, 4.384885539104331];
 const brusselsPopupContent = `
   <strong>EU Space Support Office</strong><br>
-  Email: <a href="mailto:supportoffice@euspa-programme.eu">supportoffice@euspa-programme.eu<br>
+  Email: <a href="mailto:support@euspace-programme.eu">support@euspace-programme.eu<br>
   <a href="https://www.copernicus.eu/en">More info`
 const brusselsMarker = L.marker(brusselsCoordinates, {icon: myIcon_Red}).bindPopup(brusselsPopupContent).addTo(EUSSOLayer);
+
+// PROVA Copernicus Fellows marker layer
+const CopFellowsPROVA = L.layerGroup().addTo(map);
+//PROVA Copernicus Fellows Standalone popup 
+const CopFellowsCoordPROVA = [36.5081907188428, 2.8749242429293744];
+const CopFellowsPopupContentPROVA = `
+  <strong>Example: Blida University, INSTITUTE OF AERONAUTICS AND SPACE STUDIES</strong><br>
+  Primary contact: Person Responsible<br>
+  Email: <a href="mailto:contact@univ-blida.dz">contact@univ-blida.dz<br>`
+const CopFellowsMarkerPROVA = L.marker(CopFellowsCoordPROVA, {icon: myIcon_Black}).bindPopup(CopFellowsPopupContentPROVA).addTo(CopFellowsPROVA);
 
 
 
 // Filter checkboxes
 const academiesCheckbox = document.getElementById('academiesCheckbox');
 const relaysCheckbox = document.getElementById('relaysCheckbox');
-//const CopambassadorCheckbox = document.getElementById('CopambassadorChecbox');
+const CopFellowsCheckbox = document.getElementById('CopFellowsCheckbox');
 //const EUSAmbassadorCheckbox = document.getElementById('EUSambassadorCheckbox');
 
 academiesCheckbox.addEventListener('change', updateMarkers);
 relaysCheckbox.addEventListener('change', updateMarkers);
-//CopambassadorChecbox.addEventListener('change', updateMarkers);
+CopFellowsCheckbox.addEventListener('change', updateMarkers);
 //EUSambassadorCheckbox.addEventListener('change', updateMarkers);
 
 
 function updateMarkers() {
   map.eachLayer(function (layer) {
-        if (layer instanceof L.Marker && layer !== EUSSOLayer.getLayers()[0]) {
+        if (layer instanceof L.Marker && layer !== EUSSOLayer.getLayers()[0] && layer !==CopFellowsPROVA.getLayers()[0]) {
           map.removeLayer(layer);
         }
       });
@@ -249,9 +319,6 @@ function updateMarkers() {
         const marker = L.marker(coordinates, { icon: myIcon_Academy });
         marker.bindPopup(popupContentAcademies);
         marker.addTo(map);
-        console.log(academy.Institute + ": " + coordinates[0] + ", " + coordinates[1]);
-      } else {
-        console.log("Invalid coordinates for " + academy.Institute);
       }
       }
     }
@@ -271,16 +338,10 @@ function updateMarkers() {
           const marker = L.marker(coordinates, { icon: myIcon_Orange });
           marker.bindPopup(popupContent);
           marker.addTo(map);
-          console.log(relay.Name + ": " + coordinates[0] + ", " + coordinates[1]);
-        } else {
-          console.log("Invalid coordinates for " + relay.Name);
         }
       }
     }
 
-
-    // Add the marker cluster group to the map
-    map.addLayer(markers);
   }
 
 
