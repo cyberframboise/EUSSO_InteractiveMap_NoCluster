@@ -700,11 +700,11 @@
       "Email": "ashley.morris@sios-svalbard.org"
     },
     {
-      "Name": "Absiskey Polska (Leader of the consortium), Astri Polska, and Institute of Geodesy and Cartography",
-      "Address": "Absiskey Polska, ul. Postepu 15 02-676 Warszawa, POLSKA Adgar Plaza One - Warszawa, Poland",
-      "Coordinates": "52.230556, 21.008333",
+      "Name": "ABGi Poland (Leader of the consortium) and Institute of Geodesy and Cartography",
+      "Address": "ul. Postepu 15 02-676 Warszawa, POLSKA Adgar Plaza One - Warszawa, Poland",
+      "Coordinates": "52.18016056165574, 20.99605235872738",
       "Contact": "Pawel Kwiatkowski",
-      "Email": "p.kwiatkowski@absiskey.com"
+      "Email": "pawel.kwiatkowski@abgi‑poland.com"
     },
     {
       "Name": "CloudFerro",
@@ -908,7 +908,7 @@
       "Coordinates": "55.953056, -3.188611",
       "Contact": "Callum Norrie",
       "Email": "callum.norrie@space-flow.ltd"
-    }
+    },
   ];
 
 exports =relays;
