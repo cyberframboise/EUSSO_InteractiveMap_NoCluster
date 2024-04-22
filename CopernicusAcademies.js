@@ -1589,9 +1589,9 @@ const academies = [
       "Email": "belhabib@suptech.tn"
     },
     {
-      "Name": "National Center “Junior Academy of Science of Ukraine” (JAS of Ukraine)",
+      "Name": "National Center “Junior Academy of Sciences of Ukraine” (JAS of Ukraine)",
       "Address": "vul. Degtyarivska, 38/44 - 04119, Kyiv, Ukraine",
-      "Coordinates": "50.443333, 30.523056",
+      "Coordinates": "50.463663198443044, 30.46096559485479",
       "Contact": "Svitlana Babiichuk",
       "Email": "gis_rs@man.gov.ua"
     },
