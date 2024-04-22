@@ -78,22 +78,6 @@
             <label for="relaysCheckbox">Copernicus Relays</label>
             <input type="checkbox" id="relaysCheckbox" checked>
           </div>
-        
-          <div class="checkbox-row">
-            <label for="CopFellowsCheckbox">Copernicus Fellows</label>
-            <input type="checkbox" id="CopFellowsCheckbox" checked>
-        
-            <!--<label for="EUSpaceambassadorCheckbox">EU Space Ambassador</label>
-            <input type="checkbox" id="EUSpaceambassadorCheckbox" checked>
-          </div>
-        
-          <div class="checkbox-row">
-            <label for="GalileoambassadorCheckbox">Galileo Ambassador</label>
-            <input type="checkbox" id="GalileoambassadorCheckbox" checked>
-        
-            <label for="IRISambassadorCheckbox">IRIS2 Ambassador</label>
-            <input type="checkbox" id="IRISambassadorCheckbox" checked>
-          </div>-->
         </div>        
       </div>
       
@@ -253,10 +237,6 @@ legend.onAdd = function (map) {
   div.innerHTML += '<img src="https://www.pngall.com/wp-content/uploads/2017/05/Map-Marker-PNG-Picture.png" style="width: 20px; height: 20px;"> EU Space Support Office<br>';
   div.innerHTML += '<img src="Academy.svg" style="width: 20px; height: 20px;"> Copernicus Academy Members<br>';
   div.innerHTML += '<img src="https://www.pngall.com/wp-content/uploads/2017/05/Map-Marker-Free-Download-PNG.png" style="width: 20px; height: 20px;"> Copernicus Relays<br>';
-  div.innerHTML += '<img src="https://www.pngall.com/wp-content/uploads/2017/05/Map-Marker-PNG-Clipart.png" style="width: 20px; height: 20px;">   Copernicus Fellows<br>';
-  //div.innerHTML += '<img src="https://www.pngall.com/wp-content/uploads/2017/05/Map-Marker-PNG-Clipart.png" style="width: 20px; height: 20px;">   EU Space Ambassador<br>';
-  //div.innerHTML += '<img src="https://www.pngall.com/wp-content/uploads/2017/05/Map-Marker-PNG-Clipart.png" style="width: 20px; height: 20px;">   Galileo Ambassador<br>';
-  //div.innerHTML += '<img src="https://www.pngall.com/wp-content/uploads/2017/05/Map-Marker-PNG-Clipart.png" style="width: 20px; height: 20px;">   IRIS2 Ambassador<br>';
   return div;
 };
 
@@ -273,33 +253,21 @@ const brusselsPopupContent = `
   <a href="https://www.copernicus.eu/en">More info`
 const brusselsMarker = L.marker(brusselsCoordinates, {icon: myIcon_Red}).bindPopup(brusselsPopupContent).addTo(EUSSOLayer);
 
-// PROVA Copernicus Fellows marker layer
-const CopFellowsPROVA = L.layerGroup().addTo(map);
-//PROVA Copernicus Fellows Standalone popup 
-const CopFellowsCoordPROVA = [36.5081907188428, 2.8749242429293744];
-const CopFellowsPopupContentPROVA = `
-  <strong>Example: Blida University, INSTITUTE OF AERONAUTICS AND SPACE STUDIES</strong><br>
-  Primary contact: Person Responsible<br>
-  Email: <a href="mailto:contact@univ-blida.dz">contact@univ-blida.dz<br>`
-const CopFellowsMarkerPROVA = L.marker(CopFellowsCoordPROVA, {icon: myIcon_Black}).bindPopup(CopFellowsPopupContentPROVA).addTo(CopFellowsPROVA);
+
 
 
 
 // Filter checkboxes
 const academiesCheckbox = document.getElementById('academiesCheckbox');
 const relaysCheckbox = document.getElementById('relaysCheckbox');
-const CopFellowsCheckbox = document.getElementById('CopFellowsCheckbox');
-//const EUSAmbassadorCheckbox = document.getElementById('EUSambassadorCheckbox');
 
 academiesCheckbox.addEventListener('change', updateMarkers);
 relaysCheckbox.addEventListener('change', updateMarkers);
-CopFellowsCheckbox.addEventListener('change', updateMarkers);
-//EUSambassadorCheckbox.addEventListener('change', updateMarkers);
 
 
 function updateMarkers() {
   map.eachLayer(function (layer) {
-        if (layer instanceof L.Marker && layer !== EUSSOLayer.getLayers()[0] && layer !==CopFellowsPROVA.getLayers()[0]) {
+        if (layer instanceof L.Marker && layer !== EUSSOLayer.getLayers()[0]]) {
           map.removeLayer(layer);
         }
       });
