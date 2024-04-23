@@ -33,7 +33,7 @@
 
       .checkbox-row {
       display: flex;
-      <!--justify-content: space-between;-->
+      justify-content: space-between;
       align-items: left;
       margin-top: 5px;
       }
@@ -77,7 +77,7 @@
         
             <label for="relaysCheckbox">Copernicus Relays</label>
             <input type="checkbox" id="relaysCheckbox" checked>
-          </div>
+          </div>      
         </div>        
       </div>
       
@@ -164,6 +164,85 @@ for (let i = 0; i < relays.length; i++) {
   }
 };
 
+//Legend
+const legend = L.control({position: 'topright'});
+
+legend.onAdd = function (map) {
+  const div = L.DomUtil.create('div', 'info legend');
+  div.innerHTML += '<img src="https://www.pngall.com/wp-content/uploads/2017/05/Map-Marker-PNG-Picture.png" style="width: 20px; height: 20px;"> EU Space Support Office<br>';
+  div.innerHTML += '<img src="Academy.svg" style="width: 20px; height: 20px;"> Copernicus Academy Members<br>';
+  div.innerHTML += '<img src="https://www.pngall.com/wp-content/uploads/2017/05/Map-Marker-Free-Download-PNG.png" style="width: 20px; height: 20px;"> Copernicus Relays<br>';
+  return div;
+};
+
+legend.addTo(map);
+
+
+// EUSSO marker layer
+const EUSSOLayer = L.layerGroup().addTo(map);
+//Standalone popup for EUSSO
+const brusselsCoordinates = [50.8403436233206, 4.384885539104331];
+const brusselsPopupContent = `
+  <strong>EU Space Support Office</strong><br>
+  Email: <a href="mailto:support@euspace-programme.eu">support@euspace-programme.eu<br>
+  <a href="https://www.copernicus.eu/en">More info`
+const brusselsMarker = L.marker(brusselsCoordinates, {icon: myIcon_Red}).bindPopup(brusselsPopupContent).addTo(EUSSOLayer);
+
+
+// Filter checkboxes
+const academiesCheckbox = document.getElementById('academiesCheckbox');
+
+academiesCheckbox.addEventListener('change', updateMarkers);
+relaysCheckbox.addEventListener('change', updateMarkers);
+
+
+function updateMarkers() {
+  map.eachLayer(function (layer) {
+        if (layer instanceof L.Marker && layer !== EUSSOLayer.getLayers()[0]) {
+          map.removeLayer(layer);
+        }
+      });
+
+  // Add academy markers if the checkbox is checked
+  if (academiesCheckbox.checked) {
+    for (let i = 0; i < academies.length; i++) {
+      const academy = academies[i];
+      const coordinates = academy.Coordinates.split(',').map(coord => parseFloat(coord.trim()));
+
+      if (!isNaN(coordinates[0]) && !isNaN(coordinates[1])) {
+        const popupContentAcademies = `
+        <strong>${academy.Name}</strong><br>
+        Primary contact: ${academy.Contact}<br>
+        Email: <a href="mailto:${academy.Email}">${academy.Email}</a><br>
+        `;
+        const marker = L.marker(coordinates, { icon: myIcon_Academy });
+        marker.bindPopup(popupContentAcademies);
+        marker.addTo(map);
+      }
+      }
+    }
+
+    // Add relay markers if the checkbox is checked
+    if (relaysCheckbox.checked) { 
+      for (let i = 0; i < relays.length; i++) {
+        const relay = relays[i];
+        const coordinates = relay.Coordinates.split(',').map(coord => parseFloat(coord.trim()));
+
+        if (!isNaN(coordinates[0]) && !isNaN(coordinates[1])) {
+          const popupContent = `
+            <strong>${relay.Name}</strong><br>
+            Primary contact: ${relay.Contact}<br>
+            Email: <a href="mailto:${relay.Email}">${relay.Email}</a><br>
+          `;
+          const marker = L.marker(coordinates, { icon: myIcon_Orange });
+          marker.bindPopup(popupContent);
+          marker.addTo(map);
+        }
+      }
+    }
+
+  };
+
 //SANITY CHECK 
 
 //number of ACADEMIES
@@ -207,6 +286,28 @@ function findDuplicateRelaysByName(relays) {
 }
 findDuplicateRelaysByName(relays);
 
+// duplicates Relays Coordinates
+function findDuplicateRelaysCoord(relays) {
+  const relayCoords = new Set(); // Set to store unique relay coordinates
+  const duplicateCoordRelays = []; // Array to store relays with duplicate coordinates
+
+  for (const relay of relays) {
+    const relayCoord = relay.Coordinates; // Extract the Coordinate property
+    if (relayCoords.has(relayCoord)) { // Check if coordinates already exists
+      duplicateCoordRelays.push(relay);
+    } else {
+      relayCoords.add(relayCoord); // Add unique coordinates to the Set
+    }
+  }
+
+  if (duplicateCoordRelays.length > 0) {
+    console.log("Duplicate Copernicus Relays Coordinates:", duplicateRelays);
+  } else {
+    console.log("No duplicate Copernicus Relay Coordinates found.");
+  }
+}
+findDuplicateRelaysCoord(relays);
+
 // duplicates Academies
 function findDuplicateAcademiesByName(academies) {
   const academyNames = new Set(); // Set to store unique relay names
@@ -229,88 +330,28 @@ function findDuplicateAcademiesByName(academies) {
 }
 findDuplicateAcademiesByName(academies);
 
-//Legend
-const legend = L.control({position: 'topright'});
-
-legend.onAdd = function (map) {
-  const div = L.DomUtil.create('div', 'info legend');
-  div.innerHTML += '<img src="https://www.pngall.com/wp-content/uploads/2017/05/Map-Marker-PNG-Picture.png" style="width: 20px; height: 20px;"> EU Space Support Office<br>';
-  div.innerHTML += '<img src="Academy.svg" style="width: 20px; height: 20px;"> Copernicus Academy Members<br>';
-  div.innerHTML += '<img src="https://www.pngall.com/wp-content/uploads/2017/05/Map-Marker-Free-Download-PNG.png" style="width: 20px; height: 20px;"> Copernicus Relays<br>';
-  return div;
-};
-
-legend.addTo(map);
-
-
-// EUSSO marker layer
-const EUSSOLayer = L.layerGroup().addTo(map);
-//Standalone popup for EUSSO
-const brusselsCoordinates = [50.8403436233206, 4.384885539104331];
-const brusselsPopupContent = `
-  <strong>EU Space Support Office</strong><br>
-  Email: <a href="mailto:support@euspace-programme.eu">support@euspace-programme.eu<br>
-  <a href="https://www.copernicus.eu/en">More info`
-const brusselsMarker = L.marker(brusselsCoordinates, {icon: myIcon_Red}).bindPopup(brusselsPopupContent).addTo(EUSSOLayer);
-
-
-
-
-
-// Filter checkboxes
-const academiesCheckbox = document.getElementById('academiesCheckbox');
-const relaysCheckbox = document.getElementById('relaysCheckbox');
-
-academiesCheckbox.addEventListener('change', updateMarkers);
-relaysCheckbox.addEventListener('change', updateMarkers);
-
-
-function updateMarkers() {
-  map.eachLayer(function (layer) {
-        if (layer instanceof L.Marker && layer !== EUSSOLayer.getLayers()[0]]) {
-          map.removeLayer(layer);
-        }
-      });
-
-  // Add academy markers if the checkbox is checked
-  if (academiesCheckbox.checked) {
-    for (let i = 0; i < academies.length; i++) {
-      const academy = academies[i];
-      const coordinates = academy.Coordinates.split(',').map(coord => parseFloat(coord.trim()));
-
-      if (!isNaN(coordinates[0]) && !isNaN(coordinates[1])) {
-        const popupContentAcademies = `
-        <strong>${academy.Name}</strong><br>
-        Primary contact: ${academy.Contact}<br>
-        Email: <a href="mailto:${academy.Email}">${academy.Email}</a><br>
-        `;
-        const marker = L.marker(coordinates, { icon: myIcon_Academy });
-        marker.bindPopup(popupContentAcademies);
-        marker.addTo(map);
-      }
-      }
+// duplicates Academies Coordinates
+function findDuplicateAcademiesCoord(academies) {
+  const academyCoords = new Set(); 
+  const duplicateCoordAcademies = []; 
+  for (const academy of academies) {
+    const academyCoord = academy.Coordinates; 
+    if (academyCoords.has(academyCoord)) { 
+      duplicateCoordAcademies.push(academy);
+    } else {
+      academyCoords.add(academyCoord); 
     }
-
-    // Add relay markers if the checkbox is checked
-    if (relaysCheckbox.checked) { 
-      for (let i = 0; i < relays.length; i++) {
-        const relay = relays[i];
-        const coordinates = relay.Coordinates.split(',').map(coord => parseFloat(coord.trim()));
-
-        if (!isNaN(coordinates[0]) && !isNaN(coordinates[1])) {
-          const popupContent = `
-            <strong>${relay.Name}</strong><br>
-            Primary contact: ${relay.Contact}<br>
-            Email: <a href="mailto:${relay.Email}">${relay.Email}</a><br>
-          `;
-          const marker = L.marker(coordinates, { icon: myIcon_Orange });
-          marker.bindPopup(popupContent);
-          marker.addTo(map);
-        }
-      }
-    }
-
   }
+
+  if (duplicateCoordAcademies.length > 0) {
+    console.log("Duplicate Copernicus Academy Coordinates:", duplicateCoordAcademies);
+  } else {
+    console.log("No duplicate Copernicus Academy Coordinates found.");
+  }
+}
+findDuplicateAcademiesCoord(academies);
+
+
 
 
 </script>

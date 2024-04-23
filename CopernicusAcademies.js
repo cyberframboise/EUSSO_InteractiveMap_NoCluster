@@ -303,7 +303,7 @@ const academies = [
     {
       "Name": "Universidad de Oriente UNIVO",
       "Address": "4ta calle poniente 705, SAN MIGUEL, El Salvador",
-      "Coordinates": "13.493889, -88.326389",
+      "Coordinates": "13.4817801361117, -88.18365988028907",
       "Contact": "Jonathan Bonilla",
       "Email": "jromero@univo.edu.sv"
     },
@@ -317,7 +317,7 @@ const academies = [
     {
       "Name": "Presidencia de la República de El Salvador\n[Member of CSUCA consortium]",
       "Address": "Alameda Manuel Enrique Araujo 5500, San Salvador, El Salvador",
-      "Coordinates": "13.697222, -88.804167",
+      "Coordinates": "13.691866247957162, -89.23192451603269",
       "Contact": "Secretaria de Innovacion",
       "Email": "echang@presidencia.gob.sv"
     },
@@ -331,7 +331,7 @@ const academies = [
     {
       "Name": "Universidad de Oriente (UNIVO)\n[Member of CSUCA consortium]",
       "Address": "4ta calle poniente 705, SAN MIGUEL, El Salvador",
-      "Coordinates": "13.493889, -88.326389",
+      "Coordinates": "13.48175938790004, -88.18384437063962",
       "Contact": "Jonathan Bonilla",
       "Email": "jromero@univo.edu.sv"
     },
@@ -597,7 +597,7 @@ const academies = [
     {
       "Name": "National Technical University of Athens – RSLab & Microlab\n[Member of GR-CAN]",
       "Address": "9, Iroon Polytechniou Avenue, Zografou Campus 15780 Zografou, Greece",
-      "Coordinates": "37.963889, 23.776389",
+      "Coordinates": "37.977831108590294, 23.783482129137404",
       "Contact": "Dimitrios Soudris",
       "Email": "dsoudris@microlab.ntua.gr"
     },
@@ -618,7 +618,7 @@ const academies = [
     {
       "Name": "National and Kapodistrian University of Athens (NKUA) – Department of Environmental Physics-Meteorology\n[Member of GR-CAN]",
       "Address": "30 Panepistimiou Street 157 72 Athens, Greece",
-      "Coordinates": "37.981389, 23.729167",
+      "Coordinates": "37.96776225990759, 23.782801383037125",
       "Contact": "Dimitrios Soudris",
       "Email": "dsoudris@microlab.ntua.gr"
     },
@@ -646,7 +646,7 @@ const academies = [
     {
       "Name": "National and Kapodistrian University of Athens – Laboratory of Climatology and Atmospheric Environment (LACAE)",
       "Address": "University Campus (Panepistimioupolis Zografou) - GR 15784, Athens, Greece",
-      "Coordinates": "37.963889, 23.776389",
+      "Coordinates": "37.96741175916764, 23.78559765401677",
       "Contact": "Panagiotis Nastos",
       "Email": "nastos@geol.uoa.gr"
     },
@@ -702,14 +702,14 @@ const academies = [
     {
       "Name": "Universidad Rafael Landívar de Guatemala – Instituto de investigación y proyección sobre ciencia y tecnología (INCYT)\n[Member of CSUCA consortium]",
       "Address": "Vista Hermosa III, zona 16 Guatemala",
-      "Coordinates": "14.591944, -90.510278",
+      "Coordinates": "14.596788109513513, -90.48618687388463",
       "Contact": "Edson Toniño  Hernández Mazariegos",
       "Email": "ethernadez@url.edu.gt Edsonhernan1468@hotmail.com"
     },
     {
       "Name": "Universidad Rafael Landívar de Guatemala – Unidad de información estratégica para la investigación y proyección (UIE)\n[Member of CSUCA consortium]",
       "Address": "Vista Hermosa III, zona 16 Guatemala",
-      "Coordinates": "14.591944, -90.510278",
+      "Coordinates": "14.594568938238648, -90.48348420189956",
       "Contact": "Carlos Guillermo Alvarado Cerezo",
       "Email": "carlosalvarado@csuca.org"
     },
