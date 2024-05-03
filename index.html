@@ -128,22 +128,76 @@
     iconSize: [30, 30], // Adjust width and height as required
     });
 
+// Function to update marker size based on zoom level
+function updateMarkerSize() {
+    const currentZoom = map.getZoom();
+    // Adjust marker size based on zoom level
+    let newSize = [30 * (currentZoom / 5), 30 * (currentZoom / 5)]; // Adjust the multiplier as needed
+    // Define maximum size for the icons
+    const maxSize = [30, 30]; // Adjust as needed
+
+    // Limit the size of the icons to the maximum size
+    newSize = [
+        Math.min(newSize[0], maxSize[0]),
+        Math.min(newSize[1], maxSize[1])
+    ];
+
+    myIcon_Academy.options.iconSize = newSize;
+    myIcon_Orange.options.iconSize = newSize;
+    myIcon_Red.options.iconSize = newSize;
+
+    // Refresh markers to apply changes
+    map.eachLayer(function (layer) {
+        if (layer instanceof L.Marker) {
+            // Check if the marker's icon is myIcon_Academy
+            if (layer.options.icon.options.iconUrl === myIcon_Academy.options.iconUrl) {
+                layer.setIcon(L.icon({
+                    iconUrl: myIcon_Academy.options.iconUrl,
+                    iconSize: newSize,
+                }));
+            }
+            if (layer.options.icon.options.iconUrl === myIcon_Red.options.iconUrl) {layer.setIcon(L.icon({
+                    iconUrl: myIcon_Red.options.iconUrl,
+                    iconSize: newSize,
+                }));
+            }
+            if (layer.options.icon.options.iconUrl === myIcon_Orange.options.iconUrl) {layer.setIcon(L.icon({
+                    iconUrl: myIcon_Orange.options.iconUrl,
+                    iconSize: newSize,
+                }));
+            }
+            if (layer.options.icon.options.iconUrl === myIcon_Black.options.iconUrl) {layer.setIcon(L.icon({
+                    iconUrl: myIcon_Black.options.iconUrl,
+                    iconSize: newSize,
+                }));
+            }             
+        }
+    });
+}
 //Loop through the ACADEMIES and add markers to the cluster group
 for (let i = 0; i < academies.length; i++) {
   const academy = academies[i];
   const coordinates = academy.Coordinates.split(',').map(coord => parseFloat(coord.trim()));
 
   if (!isNaN(coordinates[0]) && !isNaN(coordinates[1])) {
-    const popupContentAcademies = `
+    let popupContentAcademies;
+    
+    //Build popup content 
+    popupContentAcademies = `
     <strong>${academy.Name}</strong><br>
       Primary contact: ${academy.Contact}<br>
-      Email: <a href="mailto:${academy.Email}">${academy.Email}</a><br>
-    `;
+      Email: <a href="mailto:${academy.Email}">${academy.Email}</a><br>`;
+
+    //Add link only if academy.Link has a value
+    if (academy.Link) {
+      popupContentAcademies += ` <a href="${academy.Link}" target="_blank">More info</a>`;
+    }
+
     const marker = L.marker(coordinates, { icon: myIcon_Academy, iconSize: [10, 50]});
     marker.bindPopup(popupContentAcademies);
     marker.addTo(map);
   }
-}
+};
 
 
 
@@ -153,11 +207,19 @@ for (let i = 0; i < relays.length; i++) {
   const coordinates = relay.Coordinates.split(',').map(coord => parseFloat(coord.trim()));
 
   if (!isNaN(coordinates[0]) && !isNaN(coordinates[1])) {
-    const popupContentRelays = `
-    <strong>${relay.Name}</strong><br>
+    let popupContentRelays; // Define a new variable to hold the popup content
+
+    // Build the basic popup content
+    popupContentRelays = `
+      <strong>${relay.Name}</strong><br>
       Primary contact: ${relay.Contact}<br>
-      Email: <a href="mailto:${relay.Email}">${relay.Email}</a><br>
-    `;
+      Email: <a href="mailto:${relay.Email}">${relay.Email}</a><br>`;
+
+    // Add link only if relay.Link has a value
+    if (relay.Link) {
+      popupContentRelays += ` <a href="${relay.Link}" target="_blank">More info</a>`;
+    }
+
     const marker = L.marker(coordinates, { icon: myIcon_Orange });
     marker.bindPopup(popupContentRelays);
     marker.addTo(map);
@@ -215,7 +277,7 @@ function updateMarkers() {
         Primary contact: ${academy.Contact}<br>
         Email: <a href="mailto:${academy.Email}">${academy.Email}</a><br>
         `;
-        const marker = L.marker(coordinates, { icon: myIcon_Academy });
+        const marker = L.marker(coordinates, { icon: myIcon_Orange });
         marker.bindPopup(popupContentAcademies);
         marker.addTo(map);
       }
@@ -242,6 +304,12 @@ function updateMarkers() {
     }
 
   };
+
+// Listen to the zoomend event on the map
+map.on('zoomend', function () {
+    updateMarkerSize();
+});
+
 
 //SANITY CHECK 
 
